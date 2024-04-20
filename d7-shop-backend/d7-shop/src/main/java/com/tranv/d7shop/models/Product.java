@@ -20,10 +20,10 @@ public class Product extends BaseEntity {
     @Column(name = "name", nullable = false, length = 350)
     private String name;
 
-    @Column(name = "price")
+    @Column(name = "price",nullable = false)
     private float price;
 
-    @Column(name = "thumbnail", nullable = false, length = 300)
+    @Column(name = "thumbnail", length = 300)
     private String thumbnail;
 
     @Column(name = "description")

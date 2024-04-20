@@ -6,7 +6,7 @@ import com.tranv.d7shop.models.Category;
 import java.util.List;
 
 public interface ICategoryService {
-    Category saveCategory(CategoryDTO categoryDTO);
+    Category createCategory(CategoryDTO categoryDTO);
 
     Category getCategoryById(long id);
 

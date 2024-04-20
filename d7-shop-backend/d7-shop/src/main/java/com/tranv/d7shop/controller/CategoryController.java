@@ -32,7 +32,7 @@ public class CategoryController {
                     .collect(Collectors.toList());
             return ResponseEntity.badRequest().body(errorMessage);
         }
-        categoryService.saveCategory(categoriesDTO);
+        categoryService.createCategory(categoriesDTO);
         return ResponseEntity.ok("Insert Category Successfully");
     }
 

@@ -16,7 +16,7 @@ public class CategoryService implements ICategoryService {
 
 
     @Override
-    public Category saveCategory(CategoryDTO categoryDTO) {
+    public Category createCategory(CategoryDTO categoryDTO) {
         Category newCategory = Category.builder()
                 .name(categoryDTO.getName())
                 .build();
