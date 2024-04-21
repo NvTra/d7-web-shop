@@ -1,42 +1,41 @@
-package com.tranv.d7shop.dtos;
+package com.tranv.d7shop.reponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.tranv.d7shop.models.OrderDetail;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Getter
 @Setter
-public class OrderDTO {
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class OrderRepose extends BaseRepose {
+    private long id;
     @JsonProperty("user_id")
-    @Min(value = 1, message = "User's ID must be > 0")
-    private Long userId;
+    private String userId;
 
     @JsonProperty("fullname")
     private String fullName;
 
+    @JsonProperty("email")
     private String email;
 
     @JsonProperty("phone_number")
-    @NotBlank(message = "Phone number is required")
-    @Size(min = 5, message = "Phone number must be at least 5 characters")
     private String phoneNumber;
 
-    private String address;
-
+    @JsonProperty("note")
     private String note;
 
+    @JsonProperty("order_date")
+    private LocalDate orderDate;
+
+    @JsonProperty("status")
+    private String status;
+
     @JsonProperty("total_money")
-    @Min(value = 0, message = "Total money must be >= 0")
     private Float totalMoney;
 
     @JsonProperty("shipping_method")
@@ -48,6 +47,13 @@ public class OrderDTO {
     @JsonProperty("shipping_date")
     private LocalDate shippingDate;
 
+    @JsonProperty("tracking_number")
+    private String trackingNumber;
+
     @JsonProperty("payment_method")
     private String paymentMethod;
+
+    @JsonProperty("active")
+    private Boolean active;
+
 }

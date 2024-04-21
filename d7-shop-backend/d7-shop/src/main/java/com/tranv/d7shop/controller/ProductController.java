@@ -170,7 +170,7 @@ public class ProductController {
         // thêm uuid vào tên để tên là duy nhất
         String uniqueFilename = UUID.randomUUID() + "_" + fileName;
         // Đường dẫn đến file
-        Path uploadDir = Paths.get("upload");
+        Path uploadDir = Paths.get("uploads");
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
         }
