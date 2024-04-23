@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserController {
     private final IUserService userService;
 
+
     @PostMapping("/register")
     public ResponseEntity<?> register(
             @Valid @RequestBody UserDTO userDTO,
@@ -44,7 +45,11 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
-        String token = userService.loginUser(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-        return ResponseEntity.ok("Successfully logged in");
+        try {
+            String token = userService.loginUser(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
+            return ResponseEntity.ok(token);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
