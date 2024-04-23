@@ -68,10 +68,10 @@ public class UserService implements IUserService {
             if (!passwordEncoder.matches(password, existingUser.getPassword())) {
                 throw new BadCredentialsException("Wrong phone number or password");
             }
-            ;
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                phoneNumber, password
+                phoneNumber, password,
+                existingUser.getAuthorities()
         );
         //authenticate with Java Spring security
         authenticationManager.authenticate(authenticationToken);
