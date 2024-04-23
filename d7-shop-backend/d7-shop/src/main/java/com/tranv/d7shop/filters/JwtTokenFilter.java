@@ -35,12 +35,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             @NotNull HttpServletResponse response,
             @NotNull FilterChain filterChain)
             throws ServletException, IOException {
-        if (isBypassToken(request)) {
-            filterChain.doFilter(request, response);
-        }
-        final String authHeader = request.getHeader("Authorization");
-        if (authHeader != null
-                && authHeader.startsWith("Bearer ")) {
+        try {
+            if (isBypassToken(request)) {
+                filterChain.doFilter(request, response);
+            }
+            final String authHeader = request.getHeader("Authorization");
+            if (authHeader == null && !authHeader.startsWith("Bearer ")) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                return;
+            }
+//          if (authHeader != null
+//                    && authHeader.startsWith("Bearer ")) {
             final String token = authHeader.substring(7);
             final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
             if (phoneNumber != null
@@ -58,8 +63,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 }
             }
 
+//            }
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
-        filterChain.doFilter(request, response);
+
         // filterChain.doFilter(request, response); enable bypass
     }
 
