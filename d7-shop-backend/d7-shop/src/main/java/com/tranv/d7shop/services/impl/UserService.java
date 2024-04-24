@@ -3,6 +3,7 @@ package com.tranv.d7shop.services.impl;
 import com.tranv.d7shop.components.JwtTokenUtil;
 import com.tranv.d7shop.dtos.UserDTO;
 import com.tranv.d7shop.exceptions.DataNotFoundException;
+import com.tranv.d7shop.exceptions.PermissionDenyException;
 import com.tranv.d7shop.models.Role;
 import com.tranv.d7shop.models.User;
 import com.tranv.d7shop.repository.RoleRepository;
@@ -28,12 +29,18 @@ public class UserService implements IUserService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public User createUser(UserDTO userDTO) throws DataNotFoundException {
+    public User createUser(UserDTO userDTO) throws Exception {
         //register User
         String phoneNumber = userDTO.getPhoneNumber();
         if (userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new DataIntegrityViolationException("Phone number already exists");
         }
+        Role role = roleRepository.findById(
+                userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException("Role not found"));
+        if (role.getName().toUpperCase().equals(Role.ADMIN)) {
+            throw new PermissionDenyException("You cannot register an admin account");
+        }
+        //convert from userDTO=> user
         User newUser = User.builder()
                 .fullName(userDTO.getFullName())
                 .phoneNumber(userDTO.getPhoneNumber())
@@ -42,9 +49,9 @@ public class UserService implements IUserService {
                 .dateOfBirth(userDTO.getDateOfBirth())
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId())
+                .isActive(true)
                 .build();
-        Role role = roleRepository.findById(
-                userDTO.getRoleId()).orElseThrow(() -> new DataNotFoundException("Role not found"));
+
         newUser.setRole(role);
         if (userDTO.getFacebookAccountId() == 0 && userDTO.getGoogleAccountId() == 0) {
             String password = userDTO.getPassword();

@@ -24,9 +24,9 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<?> createUser(
             @Valid @RequestBody UserDTO userDTO,
-            BindingResult bindingResult) {
+            BindingResult bindingResult)  {
 
         try {
             if (bindingResult.hasErrors()) {
