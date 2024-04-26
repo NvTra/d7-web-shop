@@ -1,8 +1,11 @@
 package com.tranv.d7shop.controller;
 
+import com.tranv.d7shop.components.LocalizationUtils;
 import com.tranv.d7shop.dtos.CategoryDTO;
 import com.tranv.d7shop.models.Category;
+import com.tranv.d7shop.reponse.UpdateCategoryRepose;
 import com.tranv.d7shop.services.ICategoryService;
+import com.tranv.d7shop.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryController {
     private final ICategoryService categoryService;
+    private final LocalizationUtils localizationUtils;
 
     @PostMapping("")
     public ResponseEntity<?> saveCategory(
@@ -46,9 +50,16 @@ public class CategoryController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable long id, @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<UpdateCategoryRepose> updateCategory(
+            @PathVariable long id,
+            @RequestBody CategoryDTO categoryDTO) {
         categoryService.updateCategory(id, categoryDTO);
-        return ResponseEntity.ok("Update Category Successfully");
+
+        return ResponseEntity.ok(UpdateCategoryRepose
+                .builder()
+                .message(localizationUtils.getLocalizedMessage(
+                        MessageKeys.UPDATE_CATEGORY_SUCCESSFULLY))
+                .build());
     }
 
     @DeleteMapping("/{id}")

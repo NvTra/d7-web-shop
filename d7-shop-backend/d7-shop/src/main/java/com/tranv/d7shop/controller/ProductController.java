@@ -1,6 +1,7 @@
 package com.tranv.d7shop.controller;
 
 import com.github.javafaker.Faker;
+import com.tranv.d7shop.components.LocalizationUtils;
 import com.tranv.d7shop.dtos.ProductDTO;
 import com.tranv.d7shop.dtos.ProductImageDTO;
 import com.tranv.d7shop.exceptions.DataNotFoundException;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductService productService;
-
+    private final LocalizationUtils localizationUtils;
 
     @GetMapping("")
     public ResponseEntity<ProductListRepose> getAllProducts(

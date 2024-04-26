@@ -1,6 +1,7 @@
 package com.tranv.d7shop.controller;
 
 
+import com.tranv.d7shop.components.LocalizationUtils;
 import com.tranv.d7shop.dtos.OrderDetailDTO;
 import com.tranv.d7shop.exceptions.DataNotFoundException;
 import com.tranv.d7shop.models.OrderDetail;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderDetailController {
     private final IOrderDetailService orderDetailService;
-
+    private final LocalizationUtils localizationUtils;
     //Thêm mới 1 order detail
     @PostMapping("")
     public ResponseEntity<?> createOrderDetail(

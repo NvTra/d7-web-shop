@@ -1,8 +1,11 @@
 package com.tranv.d7shop.controller;
 
+import com.tranv.d7shop.components.LocalizationUtils;
 import com.tranv.d7shop.dtos.UserDTO;
 import com.tranv.d7shop.dtos.UserLoginDTO;
+import com.tranv.d7shop.reponse.LoginRepose;
 import com.tranv.d7shop.services.IUserService;
+import com.tranv.d7shop.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +24,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserController {
     private final IUserService userService;
-
+    private final LocalizationUtils localizationUtils;
 
     @PostMapping("/register")
     public ResponseEntity<?> createUser(
             @Valid @RequestBody UserDTO userDTO,
-            BindingResult bindingResult)  {
+            BindingResult bindingResult) {
 
         try {
             if (bindingResult.hasErrors()) {
@@ -36,6 +39,11 @@ public class UserController {
                         .collect(Collectors.toList());
                 return ResponseEntity.badRequest().body(errorMessage);
             }
+            if (!userDTO.getPassword().equals(userDTO.getRetypePassword())){
+                return ResponseEntity.badRequest().body(localizationUtils.getLocalizedMessage(
+                        MessageKeys.PASSWORD_NOT_MATCH
+                ));
+            }
             userService.createUser(userDTO);
             return ResponseEntity.ok("Successfully registered");
         } catch (Exception e) {
@@ -44,12 +52,24 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
+    public ResponseEntity<LoginRepose> login(@Valid @RequestBody UserLoginDTO userLoginDTO) {
         try {
             String token = userService.loginUser(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-            return ResponseEntity.ok(token);
+
+            return ResponseEntity.ok(
+                    LoginRepose.builder()
+                            .message(localizationUtils.getLocalizedMessage(
+                                    MessageKeys.LOGINS_SUCCESSFULLY
+                            ))
+                            .token(token)
+                            .build()
+            );
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(
+                    LoginRepose.builder()
+                            .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGINS_FAILED, e.getMessage()))
+                            .build()
+            );
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.tranv.d7shop.services.impl;
 
-import com.tranv.d7shop.components.JwtTokenUtil;
+import com.tranv.d7shop.components.JwtTokenUtils;
 import com.tranv.d7shop.dtos.UserDTO;
 import com.tranv.d7shop.exceptions.DataNotFoundException;
 import com.tranv.d7shop.exceptions.PermissionDenyException;
@@ -25,7 +25,7 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -82,6 +82,6 @@ public class UserService implements IUserService {
         );
         //authenticate with Java Spring security
         authenticationManager.authenticate(authenticationToken);
-        return jwtTokenUtil.generateToken(existingUser);
+        return jwtTokenUtils.generateToken(existingUser);
     }
 }

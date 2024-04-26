@@ -1,6 +1,6 @@
 package com.tranv.d7shop.filters;
 
-import com.tranv.d7shop.components.JwtTokenUtil;
+import com.tranv.d7shop.components.JwtTokenUtils;
 import com.tranv.d7shop.models.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,7 +27,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Value("${api.prefix}")
     private String apiPrefix;
     private final UserDetailsService userDetailsService;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @Override
     protected void doFilterInternal(
@@ -48,11 +48,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 //          if (authHeader != null
 //                    && authHeader.startsWith("Bearer ")) {
             final String token = authHeader.substring(7);
-            final String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
+            final String phoneNumber = jwtTokenUtils.extractPhoneNumber(token);
             if (phoneNumber != null
                     && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User existingUser = (User) userDetailsService.loadUserByUsername(phoneNumber);
-                if (jwtTokenUtil.validateToken(token, existingUser)) {
+                if (jwtTokenUtils.validateToken(token, existingUser)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     existingUser,
@@ -81,11 +81,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
                 Pair.of("/swagger-ui/**", "GET"),
                 Pair.of("/swagger-ui.html", "GET"),
-                Pair.of("/swagger-resources/**", "GET")
+                Pair.of("/swagger-resources/**", "GET"),
+                Pair.of("/swagger-ui/index.html", "GET"),
+                Pair.of("/swagger-ui/index.css", "GET"),
+                Pair.of("v3/api-docs", "GET")
         );
         for (final Pair<String, String> bypassToken : bypassTokens) {
-            if (request.getServletPath().contains(bypassToken.getLeft()) &&
-                    request.getMethod().equals(bypassToken.getRight())) {
+            String swagger = request.getServletPath();
+            if (request.getServletPath().contains(bypassToken.getLeft())
+                    && request.getMethod().equals(bypassToken.getRight())
+                    || swagger.startsWith("/swagger-ui/")
+                    || swagger.startsWith("/api-docs")
+            ) {
                 return true;
             }
         }
