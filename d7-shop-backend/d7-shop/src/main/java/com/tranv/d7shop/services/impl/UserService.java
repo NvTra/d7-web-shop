@@ -1,6 +1,7 @@
 package com.tranv.d7shop.services.impl;
 
 import com.tranv.d7shop.components.JwtTokenUtils;
+import com.tranv.d7shop.components.LocalizationUtils;
 import com.tranv.d7shop.dtos.UserDTO;
 import com.tranv.d7shop.exceptions.DataNotFoundException;
 import com.tranv.d7shop.exceptions.PermissionDenyException;
@@ -9,6 +10,7 @@ import com.tranv.d7shop.models.User;
 import com.tranv.d7shop.repository.RoleRepository;
 import com.tranv.d7shop.repository.UserRepository;
 import com.tranv.d7shop.services.IUserService;
+import com.tranv.d7shop.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +29,7 @@ public class UserService implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
+    private final LocalizationUtils localizationUtils;
 
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
@@ -63,7 +66,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String loginUser(String phoneNumber, String password) throws Exception {
+    public String loginUser(String phoneNumber, String password, long roleId) throws Exception {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
         if (optionalUser.isEmpty()) {
             throw new DataNotFoundException("Invalid phoneNumber or Password");
@@ -75,6 +78,10 @@ public class UserService implements IUserService {
             if (!passwordEncoder.matches(password, existingUser.getPassword())) {
                 throw new BadCredentialsException("Wrong phone number or password");
             }
+        }
+        Optional<Role> optionalRole = roleRepository.findById(roleId);
+        if (optionalRole.isEmpty() || roleId != existingUser.getRole().getId()) {
+            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 phoneNumber, password,
