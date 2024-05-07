@@ -88,11 +88,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of("v3/api-docs", "GET")
         );
         for (final Pair<String, String> bypassToken : bypassTokens) {
-            String swagger = request.getServletPath();
-            if(swagger.startsWith("/swagger-ui/")
-                    || swagger.startsWith("/api-docs")){
-                return true;
-            }
+//            String swagger = request.getServletPath();
+//            if(swagger.startsWith("/swagger-ui/")
+//                    || swagger.startsWith("/api-docs")){
+//                return true;
+//            }
             if (request.getServletPath().contains(bypassToken.getLeft())
                     && request.getMethod().equals(bypassToken.getRight())
             ) {

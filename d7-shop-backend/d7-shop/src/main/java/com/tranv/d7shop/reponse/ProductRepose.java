@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ProductRepose extends BaseRepose {
+    private long id;
 
     private String name;
 
@@ -23,6 +24,7 @@ public class ProductRepose extends BaseRepose {
 
     public static ProductRepose fromProduct(Product product) {
         ProductRepose productRepose = ProductRepose.builder()
+                .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .thumbnail(product.getThumbnail())

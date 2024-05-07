@@ -48,7 +48,9 @@ public class ProductController {
             @RequestParam("limit") int limit
     ) {
         PageRequest pageRequest = PageRequest.of(page, limit,
-                Sort.by("createdAt").descending());
+                Sort.by("id").ascending()
+//                Sort.by("createdAt").descending()
+        );
         Page<ProductRepose> productPage = productService.getAllProducts(pageRequest);
         //Tổng số trang
         int totalPage = productPage.getTotalPages();

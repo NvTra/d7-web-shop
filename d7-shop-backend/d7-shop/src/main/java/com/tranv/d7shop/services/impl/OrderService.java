@@ -59,6 +59,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public Order updateOrder(long orderId, OrderDTO orderDTO) throws DataNotFoundException {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new DataNotFoundException("Cannot find order with id: " + orderId));
@@ -77,6 +78,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional
     public void deleteOrderById(long id) {
         Order order = orderRepository.findById(id).orElseThrow(null);
         if (order != null) {
