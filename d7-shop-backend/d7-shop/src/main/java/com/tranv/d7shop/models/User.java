@@ -41,7 +41,8 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
-
+    @Column(name ="gender")
+    private int gender;
     @Column(name = "facebook_account_id")
     private int facebookAccountId;
 
