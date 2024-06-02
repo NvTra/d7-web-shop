@@ -80,22 +80,28 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/categories", apiPrefix), "GET"),
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST"),
+
+
+                // Swagger
+                Pair.of("/api-docs", "GET"),
+                Pair.of("/api-docs/**", "GET"),
+                Pair.of("/swagger-resources", "GET"),
+                Pair.of("/swagger-resources/**", "GET"),
+                Pair.of("/configuration/ui", "GET"),
+                Pair.of("/configuration/security", "GET"),
                 Pair.of("/swagger-ui/**", "GET"),
                 Pair.of("/swagger-ui.html", "GET"),
-                Pair.of("/swagger-resources/**", "GET"),
-                Pair.of("/swagger-ui/index.html", "GET"),
-                Pair.of("/swagger-ui/index.css", "GET"),
-                Pair.of("v3/api-docs", "GET")
+                Pair.of("/swagger-ui/index.html", "GET")
         );
-        for (final Pair<String, String> bypassToken : bypassTokens) {
-//            String swagger = request.getServletPath();
-//            if(swagger.startsWith("/swagger-ui/")
-//                    || swagger.startsWith("/api-docs")){
-//                return true;
-//            }
-            if (request.getServletPath().contains(bypassToken.getLeft())
-                    && request.getMethod().equals(bypassToken.getRight())
-            ) {
+        String requestPath = request.getServletPath();
+        String requestMethod = request.getMethod();
+
+        for (Pair<String, String> token : bypassTokens) {
+            String path = token.getLeft();
+            String method = token.getRight();
+            // Check if the request path and method match any pair in the bypassTokens list
+            if (requestPath.matches(path.replace("**", ".*"))
+                    && requestMethod.equalsIgnoreCase(method)) {
                 return true;
             }
         }

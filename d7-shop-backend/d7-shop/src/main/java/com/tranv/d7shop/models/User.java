@@ -27,6 +27,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "fullname", length = 100)
     private String fullName;
 
+    @Column(name = "email",nullable = false)
+    private String email;
+
     @Column(name = "phone_number", length = 10, nullable = false)
     private String phoneNumber;
 
@@ -41,8 +44,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "date_of_birth")
     private Date dateOfBirth;
+
     @Column(name ="gender")
     private int gender;
+
     @Column(name = "facebook_account_id")
     private int facebookAccountId;
 

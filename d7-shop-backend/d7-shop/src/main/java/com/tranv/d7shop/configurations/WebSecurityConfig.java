@@ -39,13 +39,16 @@ public class WebSecurityConfig {
                                 String.format("%s/roles/**",apiPrefix),
                                         String.format("%s/users/register", apiPrefix),
                                         String.format("%s/users/login", apiPrefix),
-                                        "/configuration/ui",
+                                        "/api-docs",
+                                        "/api-docs/**",
+                                        "/swagger-resources",
                                         "/swagger-resources/**",
+                                        "/configuration/ui",
                                         "/configuration/security",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
-                                        "/api-docs/**",
-                                        "/v3/**"
+                                        "/webjars/swagger-ui/**",
+                                        "/swagger-ui/index.html"
 
                                 )
                                 .permitAll()

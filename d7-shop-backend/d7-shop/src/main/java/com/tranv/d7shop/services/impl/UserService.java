@@ -48,9 +48,10 @@ public class UserService implements IUserService {
         //convert from userDTO=> user
         User newUser = User.builder()
                 .fullName(userDTO.getFullName())
+                .email(userDTO.getEmail())
                 .phoneNumber(userDTO.getPhoneNumber())
                 .password(userDTO.getPassword())
-                .address(userDTO.getAddress())
+
                 .dateOfBirth(userDTO.getDateOfBirth())
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId())
